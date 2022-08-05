@@ -1,0 +1,75 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: Gateway
+  cloud:
+    gateway:
+      routes:
+        - id: User
+          uri: lb://User
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: user
+                fallbackuri: forward:/user-fallback
+
+        - id: Wallet
+          uri: lb://Wallet
+          predicates:
+            - Path=/api/v1/wallets/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: wallet
+                fallbackuri: forward:/wallet-fallback
+
+        - id: Transaction
+          uri: lb://Transaction
+          predicates:
+            - Path=/api/v1/transactions/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: transaction
+                fallbackuri: forward:/transaction-fallback
+
+        - id: Content
+          uri: lb://Content
+          predicates:
+            - Path=/api/v1/contents/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: content
+                fallbackuri: forward:/content-fallback
+
+        - id: Documentation
+          uri: lb://Documentation
+          predicates:
+            - Path=/api/v1/documentation/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: documentation
+                fallbackuri: forward:/documentation-fallback
+
+
+
+hystrix:
+  command:
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 4000
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream

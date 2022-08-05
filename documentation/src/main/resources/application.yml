@@ -1,0 +1,20 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: Documentation
+  zipkin:
+    base-url: http://localhost:9411
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+
+api:
+  basepath-doc: /api/v1/documentation
+
+swagger:
+  config:
+    refreshrate: 15000
