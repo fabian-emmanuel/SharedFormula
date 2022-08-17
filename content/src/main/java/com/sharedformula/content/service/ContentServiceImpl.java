@@ -1,7 +1,8 @@
 package com.sharedformula.content.service;
 
-import com.sharedformula.content.exception.ResourceNotFoundException;
+import com.sharedformula.content.exceptions.ResourceNotFoundException;
 import com.sharedformula.content.model.Content;
+import com.sharedformula.content.payload.ContentDto;
 import com.sharedformula.content.payload.ContentRequest;
 import com.sharedformula.content.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,9 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Content getContent(Long contentId) {
-        return this.repository.findById(contentId)
-                .orElseThrow(ResourceNotFoundException::new);
+    public ContentDto getContent(Long contentId) {
+        Content content =  this.repository.findById(contentId)
+                .orElseThrow(()-> new ResourceNotFoundException("Content not found"));
+        return new ContentDto( content.getName(), content.getPrice(), content.getCreatorId());
     }
 }

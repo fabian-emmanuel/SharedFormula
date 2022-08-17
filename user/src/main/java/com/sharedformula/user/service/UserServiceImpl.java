@@ -1,8 +1,8 @@
 package com.sharedformula.user.service;
 
 import com.sharedformula.user.enumType.UserType;
-import com.sharedformula.user.exception.ResourceNotFoundException;
-import com.sharedformula.user.exception.UnAuthorizedException;
+import com.sharedformula.user.exceptions.ResourceNotFoundException;
+import com.sharedformula.user.exceptions.UnAuthorizedException;
 import com.sharedformula.user.model.User;
 import com.sharedformula.user.payload.*;
 import com.sharedformula.user.repository.UserRepository;
@@ -25,13 +25,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetailsResponse getUserDetails(Long userId) {
         User user = repository.findById(userId)
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(()-> new ResourceNotFoundException("User not found with id: "+userId));
 
         Wallet wallet = restTemplate.getForObject(String.format("%s/%s/%s", "http://WALLET/api/v1/wallets",user.getId(),user.getWalletId()),
                 Wallet.class);
 
         if(wallet == null) {
-            throw new ResourceNotFoundException();
+            throw new ResourceNotFoundException("Wallet not found with id: "+user.getWalletId());
         }
         return UserDetailsResponse.builder()
                 .name(user.getName())
@@ -43,10 +43,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean createContent(Long userId, ContentRequest request) {
         User user = repository.findById(userId)
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(()-> new ResourceNotFoundException("User not found with id: "+userId));
 
         if(!user.getUserType().equals(UserType.CREATOR)){
-            throw new UnAuthorizedException();
+            throw new UnAuthorizedException("User is not authorized to create content");
         }
 
         Long contentId = restTemplate.postForObject(String.format("%s/%s", "http://CONTENT/api/v1/contents",user.getId()),
@@ -58,10 +58,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean sellContent(Long contractorId, SaleRequest request) {
         User user = repository.findById(contractorId)
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(()-> new ResourceNotFoundException("User not found with id: "+contractorId));
 
         if(!user.getUserType().equals(UserType.CONTRACTOR)){
-            throw new UnAuthorizedException();
+            throw new UnAuthorizedException("User is not authorized to sell content");
         }
         return Boolean.TRUE.equals(this.restTemplate.postForObject(String.format("%s/%s/initiate-sale", "http://TRANSACTION/api/v1/transactions", user.getId()),
                 request, Boolean.class));
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(Long userId) {
         return repository.findById(userId)
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(()-> new ResourceNotFoundException("User not found with id: "+userId));
     }
 
     private UserResponse createUser(UserRequest userRequest) {

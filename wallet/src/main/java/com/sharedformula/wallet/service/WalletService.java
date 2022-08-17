@@ -2,6 +2,7 @@ package com.sharedformula.wallet.service;
 
 import com.sharedformula.wallet.model.Wallet;
 import com.sharedformula.wallet.payload.FundWalletRequest;
+import com.sharedformula.wallet.payload.WalletDto;
 
 import java.math.BigDecimal;
 
@@ -10,5 +11,5 @@ public interface WalletService {
 
     boolean fundWallet(Long walletId, FundWalletRequest request);
 
-    Wallet getWallet(Long walletId, Long userId);
+    WalletDto getWallet(Long walletId, Long userId);
 }

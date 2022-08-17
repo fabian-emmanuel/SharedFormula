@@ -1,6 +1,6 @@
 package com.sharedformula.transaction.service;
 
-import com.sharedformula.transaction.exception.ResourceNotFoundException;
+import com.sharedformula.transaction.exceptions.ResourceNotFoundException;
 import com.sharedformula.transaction.model.Transaction;
 import com.sharedformula.transaction.payload.*;
 import com.sharedformula.transaction.repository.TransactionRepository;
@@ -65,20 +65,20 @@ public class TransactionServiceImpl implements TransactionService {
         Wallet wallet =  this.restTemplate.getForObject(String.format("%s/%s/%s", "http://WALLET/api/v1/wallets",userId,walletId),
                 Wallet.class);
         if(wallet != null) return wallet;
-        else throw new ResourceNotFoundException();
+        else throw new ResourceNotFoundException("Wallet not found");
     }
 
     private User getUser(Long userId) {
         User user = this.restTemplate.getForObject(String.format("%s/%s", "http://USER/api/v1/users",userId),
                 User.class);
         if (user != null) return user;
-        else throw new ResourceNotFoundException();
+        else throw new ResourceNotFoundException("User not found");
     }
 
     private Content getContent(Long contentId) {
         Content content = this.restTemplate.getForObject(String.format("%s/%s", "http://CONTENT/api/v1/contents",contentId),
                 Content.class);
         if (content != null) return content;
-        else throw new ResourceNotFoundException();
+        else throw new ResourceNotFoundException("Content not found");
     }
 }
