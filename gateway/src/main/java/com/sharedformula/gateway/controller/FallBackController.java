@@ -36,4 +36,14 @@ public class FallBackController {
         return "Documentation Service is Taking Longer Than Expected" +
                 "Please Try Again Later!";
     }
+    @GetMapping("/order-fallback")
+    public String orderFallBack() {
+        return "Order Service is Taking Longer Than Expected \n" +
+                "Please Try Again Later!";
+    }
+    @GetMapping("/base-domain-fallback")
+    public String baseDomainFallBack() {
+        return "Base Domain Service is Taking Longer Than Expected \n" +
+               "Please Try Again Later!";
+    }
 }

@@ -17,6 +17,10 @@
         <module>config-server</module>
         <module>content</module>
         <module>documentation</module>
+        <module>order</module>
+        <module>stock</module>
+        <module>email</module>
+        <module>base-domains</module>
     </modules>
 
     <name>3line</name>

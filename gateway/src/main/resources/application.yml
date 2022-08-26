@@ -57,6 +57,45 @@ spring:
                 name: documentation
                 fallbackuri: forward:/documentation-fallback
 
+        - id: Order
+          uri: lb://Order
+          predicates:
+            - Path=/api/v1/order/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: order
+                fallbackuri: forward:/order-fallback
+
+        - id: Stock
+          uri: lb://Stock
+          predicates:
+            - Path=/api/v1/stock/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: stock
+                fallbackuri: forward:/stock-fallback
+
+        - id: Email
+          uri: lb://Email
+          predicates:
+            - Path=/api/v1/email/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: email
+                fallbackuri: forward:/email-fallback
+
+        - id: BaseDomain
+          uri: lb://BaseDomain
+          predicates:
+            - Path=/api/v1/base-domain/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: base-domain
+                fallbackuri: forward:/base-domain-fallback
 
 
 hystrix:
